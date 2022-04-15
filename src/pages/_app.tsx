@@ -1,14 +1,14 @@
 import { NextPage } from 'next'
-import Head from 'next/head'
+import { ChakraProvider } from '@chakra-ui/react'
+import { AuthProvider } from 'src/contexts/Auth.context'
 
 const MyApp: NextPage = ({ Component, pageProps }: any) => {
   return (
-    <>
-      <Head>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      </Head>
-      <Component {...pageProps} />
-    </>
+    <ChakraProvider>
+      <AuthProvider>
+        <Component {...pageProps} />
+      </AuthProvider>
+    </ChakraProvider>
   )
 }
 
