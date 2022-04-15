@@ -21,8 +21,9 @@ const AuthProvider = ({ children }: any) => {
     // TODO APIでユーザー情報取得
     const user = {
       id: 1,
+      name: 'hoge',
       email: 'hoge@gmail.com',
-      imgUrl: 'https://bit.ly/dan-abramov',
+      imgUrl: '',
     }
     setCurrentUser(user)
   }, [])

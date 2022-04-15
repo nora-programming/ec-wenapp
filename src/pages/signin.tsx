@@ -22,7 +22,7 @@ const Signin: NextPage = () => {
 
   return (
     <Common>
-      <Box mt="64px">
+      <Box mt="48px">
         <Text fontSize="22px" fontWeight="bold" textAlign="center" mb="24px">
           ログイン
         </Text>

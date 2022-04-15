@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { NextPage } from 'next'
-import { Box, useDisclosure } from '@chakra-ui/react'
+import { Box, useDisclosure, Text } from '@chakra-ui/react'
 import { ProductList } from 'src/components/organisms/productList'
 import { ProductModal } from 'src/components/molecules/productModal'
 import { Common } from 'src/layout/common'
@@ -85,7 +85,10 @@ const Home: NextPage = () => {
   return (
     <>
       <Common>
-        <Box my="32px">
+        <Box my="48px">
+          <Text fontSize="22px" fontWeight="bold" textAlign="center" mb="24px">
+            商品一覧
+          </Text>
           <ProductModal
             isOpen={isOpen}
             onClose={onClose}

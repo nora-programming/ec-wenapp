@@ -10,88 +10,118 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  MenuItemOption,
-  MenuGroup,
-  MenuOptionGroup,
-  MenuDivider,
+  useDisclosure,
 } from '@chakra-ui/react'
 import { Button } from 'src/components/atoms/button'
 import { AuthContext } from 'src/contexts/Auth.context'
+import { HiOutlineUserCircle } from 'react-icons/Hi'
+import { IconContext } from 'react-icons'
+import { UserEditModal } from 'src/components/molecules/userEditModal'
 
 export const Header = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const { currentUser } = useContext(AuthContext)
   const router = useRouter()
   const isAuthPage =
     router.pathname == '/signin' || router.pathname == '/signup'
 
   return (
-    <Flex justifyContent="space-between" pt="16px" alignItems="center">
-      <Text
-        fontSize="32px"
-        fontWeight="bold"
-        cursor="pointer"
-        onClick={() => router.push('/')}
-        _hover={{ opacity: 0.7 }}
-      >
-        EC-Mall
-      </Text>
-      <Spacer />
-      {currentUser ? (
-        <>
-          <Box mr="16px">
-            <Menu>
-              <MenuButton>
-                <Image
-                  mt="4px"
-                  borderRadius="full"
-                  boxSize="40px"
-                  src={currentUser.imgUrl}
-                  alt="Dan Abramov"
-                  cursor="pointer"
-                />
-              </MenuButton>
-              <MenuList>
-                <MenuItem fontSize="14px">プロフィールを更新</MenuItem>
-                <MenuItem fontSize="14px">ログアウト</MenuItem>
-              </MenuList>
-            </Menu>
-          </Box>
-          <Box w="100px">
-            <Button onClick={() => console.log('出品')}>出品する</Button>
-          </Box>
-        </>
-      ) : (
-        <>
-          {!isAuthPage ? (
-            <>
-              <Box mr="16px" onClick={() => router.push('signin')}>
-                <Text
-                  color="gray.700"
-                  fontWeight="bold"
-                  cursor="pointer"
-                  fontSize="14px"
-                  _hover={{ opacity: 0.7 }}
-                >
-                  ログイン
-                </Text>
-              </Box>
-              <Box w="100px">
-                <Button onClick={() => router.push('signup')}>新規登録</Button>
-              </Box>
-            </>
-          ) : (
-            <Text
-              fontSize="14px"
-              color="blue.300"
-              cursor="pointer"
-              onClick={() => router.push('/')}
-              _hover={{ opacity: 0.7 }}
-            >
-              商品一覧画面へ
-            </Text>
-          )}
-        </>
-      )}
-    </Flex>
+    <>
+      <UserEditModal isOpen={isOpen} onClose={onClose} />
+      <Flex justifyContent="space-between" pt="16px" alignItems="center">
+        <Text
+          fontSize="32px"
+          fontWeight="bold"
+          cursor="pointer"
+          onClick={() => router.push('/')}
+          _hover={{ opacity: 0.7 }}
+        >
+          EC-Mall
+        </Text>
+        <Spacer />
+        {currentUser ? (
+          <>
+            <Box mr="16px">
+              <Menu>
+                <MenuButton>
+                  {currentUser.imgUrl ? (
+                    <Image
+                      mt="4px"
+                      borderRadius="full"
+                      boxSize="40px"
+                      src={currentUser.imgUrl}
+                      alt="Dan Abramov"
+                      cursor="pointer"
+                    />
+                  ) : (
+                    <Box mt="4px">
+                      <IconContext.Provider value={{ size: '40px' }}>
+                        <HiOutlineUserCircle />
+                      </IconContext.Provider>
+                    </Box>
+                  )}
+                </MenuButton>
+                <MenuList>
+                  <MenuItem fontSize="14px" onClick={() => onOpen()}>
+                    プロフィールを更新
+                  </MenuItem>
+                  <MenuItem
+                    fontSize="14px"
+                    onClick={() => router.push('/product_purchased')}
+                  >
+                    購入した商品
+                  </MenuItem>
+                  <MenuItem
+                    fontSize="14px"
+                    onClick={() => router.push('/sales')}
+                  >
+                    売上
+                  </MenuItem>
+                  <MenuItem fontSize="14px">ログアウト</MenuItem>
+                </MenuList>
+              </Menu>
+            </Box>
+            <Box w="100px">
+              <Button onClick={() => router.push('/product/new')}>
+                出品する
+              </Button>
+            </Box>
+          </>
+        ) : (
+          <>
+            {!isAuthPage ? (
+              <>
+                <Box mr="16px" onClick={() => router.push('signin')}>
+                  <Text
+                    color="gray.700"
+                    fontWeight="bold"
+                    cursor="pointer"
+                    fontSize="14px"
+                    _hover={{ opacity: 0.7 }}
+                  >
+                    ログイン
+                  </Text>
+                </Box>
+                <Box w="100px">
+                  <Button onClick={() => router.push('signup')}>
+                    新規登録
+                  </Button>
+                </Box>
+              </>
+            ) : (
+              <Text
+                fontSize="14px"
+                color="blue.300"
+                cursor="pointer"
+                onClick={() => router.push('/')}
+                _hover={{ opacity: 0.7 }}
+              >
+                商品一覧画面へ
+              </Text>
+            )}
+          </>
+        )}
+      </Flex>
+    </>
   )
 }
