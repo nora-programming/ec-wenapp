@@ -57,7 +57,9 @@ export const ProductModal = ({ isOpen, onClose, product }: propsType) => {
             <Box mr="16px">
               <GrayButton onClick={() => onClose()}>キャンセル</GrayButton>
             </Box>
-            <Button onClick={() => console.log(product)}>購入する</Button>
+            <Box>
+              <Button onClick={() => console.log(product)}>購入する</Button>
+            </Box>
           </ModalFooter>
         </ModalContent>
       </Modal>
