@@ -11,6 +11,7 @@ import {
   Flex,
   Image,
   Text,
+  useToast,
 } from '@chakra-ui/react'
 import { AuthContext } from 'src/contexts/Auth.context'
 import { ProductType } from 'src/type/product'
@@ -25,9 +26,17 @@ type propsType = {
 export const ProductModal = ({ isOpen, onClose, product }: propsType) => {
   const { currentUser } = useContext(AuthContext)
   const router = useRouter()
+  const toast = useToast()
 
   const buy = () => {
-    if (!currentUser) router.push('/signin')
+    if (!currentUser) {
+      router.push('/signin')
+      toast({
+        description: 'ログインが必要です',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
   }
 
   return (
