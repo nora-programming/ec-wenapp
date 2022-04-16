@@ -77,7 +77,13 @@ export const UserEditModal = ({ isOpen, onClose }: propsType) => {
                     onClick={onClickButton}
                     cursor="pointer"
                   >
-                    <Image src={url} borderRadius="8px" />
+                    <Image
+                      src={url}
+                      borderRadius="8px"
+                      objectFit="cover"
+                      w="230px"
+                      h="230px"
+                    />
                   </Box>
                 </>
               ) : (

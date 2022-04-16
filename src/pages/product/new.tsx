@@ -1,13 +1,13 @@
 import { useState, useRef } from 'react'
-import { useRouter } from 'next/router'
 import { NextPage } from 'next'
 import { DownloadIcon } from '@chakra-ui/icons'
 import { Box, Image, Flex, Input, Text, Textarea } from '@chakra-ui/react'
 import { Common } from 'src/layout/common'
 import { Button } from 'src/components/atoms/button'
+import { useRequireSignin } from 'src/hooks/useRequireSignin'
 
 const ProductNew: NextPage = () => {
-  const router = useRouter()
+  useRequireSignin()
   const [title, setTitle] = useState('')
   const [url, setUrl] = useState('')
   const [description, setDescription] = useState('')

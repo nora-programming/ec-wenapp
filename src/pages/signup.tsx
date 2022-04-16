@@ -12,8 +12,10 @@ import {
 } from '@chakra-ui/react'
 import { Common } from 'src/layout/common'
 import { Button } from 'src/components/atoms/button'
+import { useRequireSignout } from 'src/hooks/useRequireSignout'
 
 const Signup: NextPage = () => {
+  useRequireSignout()
   const router = useRouter()
   const [show, setShow] = useState(false)
   const [email, setEmail] = useState('')

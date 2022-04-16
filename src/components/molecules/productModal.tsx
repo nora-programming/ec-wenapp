@@ -1,3 +1,5 @@
+import { useRouter } from 'next/router'
+import { useContext } from 'react'
 import {
   Modal,
   ModalOverlay,
@@ -10,6 +12,7 @@ import {
   Image,
   Text,
 } from '@chakra-ui/react'
+import { AuthContext } from 'src/contexts/Auth.context'
 import { ProductType } from 'src/type/product'
 import { Button, GrayButton } from 'src/components/atoms/button'
 
@@ -20,7 +23,13 @@ type propsType = {
 }
 
 export const ProductModal = ({ isOpen, onClose, product }: propsType) => {
-  if (!product) return <div />
+  const { currentUser } = useContext(AuthContext)
+  const router = useRouter()
+
+  const buy = () => {
+    if (!currentUser) router.push('/signin')
+  }
+
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
@@ -30,7 +39,7 @@ export const ProductModal = ({ isOpen, onClose, product }: propsType) => {
           <ModalBody my="40px" mx="32px">
             <Flex position="relative">
               <Image
-                src={product.imgUrl}
+                src={product?.imgUrl}
                 h="240px"
                 w="240px"
                 borderRadius="8px"
@@ -38,9 +47,9 @@ export const ProductModal = ({ isOpen, onClose, product }: propsType) => {
               />
               <Box w="430px">
                 <Text fontWeight="bold" fontSize="28px" mb="16px">
-                  {product.title}
+                  {product?.title}
                 </Text>
-                <Text fontSize="18px">{product.description}</Text>
+                <Text fontSize="18px">{product?.description}</Text>
                 <Text
                   fontWeight="bold"
                   right="0"
@@ -48,7 +57,7 @@ export const ProductModal = ({ isOpen, onClose, product }: propsType) => {
                   position="absolute"
                   fontSize="24px"
                 >
-                  {product.price}円
+                  {product?.price}円
                 </Text>
               </Box>
             </Flex>
@@ -58,7 +67,7 @@ export const ProductModal = ({ isOpen, onClose, product }: propsType) => {
               <GrayButton onClick={() => onClose()}>キャンセル</GrayButton>
             </Box>
             <Box>
-              <Button onClick={() => console.log(product)}>購入する</Button>
+              <Button onClick={() => buy()}>購入する</Button>
             </Box>
           </ModalFooter>
         </ModalContent>

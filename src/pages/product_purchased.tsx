@@ -12,6 +12,7 @@ import {
 } from '@chakra-ui/react'
 import { Common } from 'src/layout/common'
 import { PurchaseHistoryType } from 'src/type/purchaseHistory'
+import { useRequireSignin } from 'src/hooks/useRequireSignin'
 
 const soldProducts: PurchaseHistoryType[] = [
   {
@@ -57,6 +58,7 @@ const soldProducts: PurchaseHistoryType[] = [
 ]
 
 const ProductPurchased: NextPage = () => {
+  useRequireSignin()
   return (
     <Common>
       <Box mt="48px">

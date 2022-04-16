@@ -22,7 +22,13 @@ export const ProductCard = ({ children, imgUrl, price }: propsType) => {
         >
           {price}円
         </Text>
-        <Image src={imgUrl} borderRadius="8px" />
+        <Image
+          src={imgUrl}
+          borderRadius="8px"
+          objectFit="cover"
+          w="230px"
+          h="230px"
+        />
       </Box>
       <Text
         fontWeight="bold"

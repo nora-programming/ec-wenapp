@@ -1,22 +1,18 @@
-import { useState } from 'react'
-import { useRouter } from 'next/router'
 import { NextPage } from 'next'
-import { EmailIcon, UnlockIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import {
   Box,
   Text,
   Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
-  TableCaption,
   TableContainer,
 } from '@chakra-ui/react'
 import { Common } from 'src/layout/common'
 import { SoldProductType } from 'src/type/soldProduct'
+import { useRequireSignin } from 'src/hooks/useRequireSignin'
 
 const soldProducts: SoldProductType[] = [
   {
@@ -62,6 +58,7 @@ const soldProducts: SoldProductType[] = [
 ]
 
 const Sales: NextPage = () => {
+  useRequireSignin()
   return (
     <Common>
       <Box mt="48px">
