@@ -17,13 +17,33 @@ import { AuthContext } from 'src/contexts/Auth.context'
 import { HiOutlineUserCircle } from 'react-icons/Hi'
 import { IconContext } from 'react-icons'
 import { UserEditModal } from 'src/components/molecules/userEditModal'
+import axios from 'axios'
+import { useToast } from '@chakra-ui/react'
 
 export const Header = () => {
+  const toast = useToast()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { currentUser } = useContext(AuthContext)
+  const { currentUser, setCurrentUser } = useContext(AuthContext)
   const router = useRouter()
   const isAuthPage =
     router.pathname == '/signin' || router.pathname == '/signup'
+
+  const signout = async () => {
+    try {
+      await axios.delete(`http://localhost:8080/signout`, {
+        withCredentials: true,
+      })
+      toast({
+        description: 'ログアウトしました',
+        duration: 3000,
+        isClosable: true,
+        status: 'error',
+      })
+      setCurrentUser(null)
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
   return (
     <>
@@ -44,12 +64,12 @@ export const Header = () => {
             <Box mr="16px">
               <Menu>
                 <MenuButton>
-                  {currentUser.imgUrl ? (
+                  {currentUser.ImgUrl ? (
                     <Image
                       mt="4px"
                       borderRadius="full"
                       boxSize="40px"
-                      src={currentUser.imgUrl}
+                      src={currentUser.ImgUrl}
                       alt="Dan Abramov"
                       cursor="pointer"
                     />
@@ -77,7 +97,9 @@ export const Header = () => {
                   >
                     売上
                   </MenuItem>
-                  <MenuItem fontSize="14px">ログアウト</MenuItem>
+                  <MenuItem fontSize="14px" onClick={() => signout()}>
+                    ログアウト
+                  </MenuItem>
                 </MenuList>
               </Menu>
             </Box>

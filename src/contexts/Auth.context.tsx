@@ -6,6 +6,7 @@ import {
   SetStateAction,
 } from 'react'
 import { UserType } from 'src/type/user'
+import axios from 'axios'
 
 type AuthContextProps = {
   currentUser: UserType | null | undefined
@@ -18,14 +19,17 @@ const AuthProvider = ({ children }: any) => {
   const [currentUser, setCurrentUser] = useState<UserType | null | undefined>()
 
   useEffect(() => {
-    // TODO APIでユーザー情報取得
-    const user = {
-      id: 1,
-      name: 'hoge',
-      email: 'hoge@gmail.com',
-      imgUrl: '',
+    const f = async () => {
+      try {
+        const res: any = await axios.get(`http://localhost:8080/me`, {
+          withCredentials: true,
+        })
+        setCurrentUser(res.data)
+      } catch (e) {
+        setCurrentUser(null)
+      }
     }
-    setCurrentUser(user)
+    f()
   }, [])
 
   return (

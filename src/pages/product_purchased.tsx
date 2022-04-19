@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { NextPage } from 'next'
 import {
   Box,
@@ -11,86 +12,69 @@ import {
   TableContainer,
 } from '@chakra-ui/react'
 import { Common } from 'src/layout/common'
-import { PurchaseHistoryType } from 'src/type/purchaseHistory'
 import { useRequireSignin } from 'src/hooks/useRequireSignin'
-
-const soldProducts: PurchaseHistoryType[] = [
-  {
-    product: {
-      id: 1,
-      title: 'Tシャツ',
-      description: '洋服です',
-      imgUrl: '',
-      price: 1000,
-    },
-    sellerName: 'あんな',
-  },
-  {
-    product: {
-      id: 2,
-      title: 'ワイシャツ',
-      description: '洋服です',
-      imgUrl: '',
-      price: 1000,
-    },
-    sellerName: '小次郎',
-  },
-  {
-    product: {
-      id: 3,
-      title: 'コート',
-      description: '洋服です',
-      imgUrl: '',
-      price: 1000,
-    },
-    sellerName: 'じろう',
-  },
-  {
-    product: {
-      id: 4,
-      title: 'ズボン',
-      description: '洋服です',
-      imgUrl: '',
-      price: 1000,
-    },
-    sellerName: '隆二',
-  },
-]
+import { PurchasedProductType } from 'src/type/purchasedProduct'
+import axios from 'axios'
 
 const ProductPurchased: NextPage = () => {
   useRequireSignin()
+  const [purchasedProducts, setPurchasedProducts] =
+    useState<PurchasedProductType[]>()
+  useEffect(() => {
+    const f = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:8080/purchased_products`,
+          {
+            withCredentials: true,
+          },
+        )
+
+        setPurchasedProducts(res.data)
+      } catch (e) {
+        console.log(e)
+      }
+    }
+    f()
+  }, [])
   return (
     <Common>
       <Box mt="48px">
         <Text fontSize="22px" fontWeight="bold" textAlign="center" mb="24px">
           購入した商品
         </Text>
-        <TableContainer>
-          <Table variant="simple">
-            <Thead>
-              <Tr>
-                <Th fontSize="16px">商品名</Th>
-                <Th fontSize="16px">販売者</Th>
-                <Th fontSize="16px" isNumeric>
-                  金額
-                </Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {soldProducts.map((p) => {
-                return (
+        <>
+          {purchasedProducts && purchasedProducts.length > 0 ? (
+            <TableContainer>
+              <Table variant="simple">
+                <Thead>
+                  <Tr>
+                    <Th fontSize="16px">商品名</Th>
+                    <Th fontSize="16px">販売者</Th>
+                    <Th fontSize="16px" isNumeric>
+                      金額
+                    </Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
                   <>
-                    <Tr>
-                      <Td>{p.product.title}</Td>
-                      <Td>{p.sellerName}</Td>
-                      <Td isNumeric>{p.product.price}円</Td>
-                    </Tr>
+                    {purchasedProducts.map((p) => {
+                      return (
+                        <Tr key={p.id}>
+                          <Td>{p.title}</Td>
+                          <Td>{p.creater_name}</Td>
+                          <Td isNumeric>{p.price}円</Td>
+                        </Tr>
+                      )
+                    })}
                   </>
-                )
-              })}
-            </Tbody>
-          </Table>
-        </TableContainer>
+                </Tbody>
+              </Table>
+            </TableContainer>
+          ) : (
+            <Text>まだ購入した商品はありません</Text>
+          )}
+        </>
       </Box>
     </Common>
   )

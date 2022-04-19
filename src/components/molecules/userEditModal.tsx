@@ -10,11 +10,13 @@ import {
   Image,
   Text,
   Input,
+  useToast,
 } from '@chakra-ui/react'
 import { useState, useRef, useContext, useEffect } from 'react'
 import { DownloadIcon } from '@chakra-ui/icons'
 import { Button, GrayButton } from 'src/components/atoms/button'
 import { AuthContext } from 'src/contexts/Auth.context'
+import axios from 'axios'
 
 type propsType = {
   isOpen: boolean
@@ -25,12 +27,13 @@ export const UserEditModal = ({ isOpen, onClose }: propsType) => {
   const [name, setName] = useState('')
   const [url, setUrl] = useState('')
   const [file, setFile] = useState<File>()
-  const { currentUser } = useContext(AuthContext)
+  const { currentUser, setCurrentUser } = useContext(AuthContext)
   const inputRef = useRef<HTMLInputElement>(null)
+  const toast = useToast()
 
   useEffect(() => {
     if (!currentUser) return
-    setName(currentUser.name)
+    setName(currentUser.Name)
     setUrl(url)
   }, [currentUser, setUrl, url])
 
@@ -52,6 +55,30 @@ export const UserEditModal = ({ isOpen, onClose }: propsType) => {
     }
     setFile(f)
     reader.readAsDataURL(f)
+  }
+
+  const update = async () => {
+    const data = new FormData()
+    data.append('name', name)
+    if (file) data.append('file', file)
+    try {
+      const res = await axios.put(
+        `http://localhost:8080/users/${currentUser?.ID}`,
+        data,
+        {
+          withCredentials: true,
+        },
+      )
+      setCurrentUser(res.data)
+      toast({
+        description: 'プロフィールを更新しました！',
+        duration: 3000,
+        isClosable: true,
+      })
+      onClose()
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   return (
@@ -121,12 +148,7 @@ export const UserEditModal = ({ isOpen, onClose }: propsType) => {
                   <Text fontSize="16px" fontWeight="bold" mb="8px">
                     メールアドレス
                   </Text>
-                  <Input
-                    value={currentUser?.email}
-                    placeholder="表示名を入力してください"
-                    isDisabled
-                    bg="gray.300"
-                  />
+                  <Input value={currentUser?.Email} isDisabled bg="gray.300" />
                 </Box>
               </Box>
             </Flex>
@@ -136,7 +158,7 @@ export const UserEditModal = ({ isOpen, onClose }: propsType) => {
               <GrayButton onClick={() => onClose()}>キャンセル</GrayButton>
             </Box>
             <Box>
-              <Button onClick={() => console.log('更新')}>更新する</Button>
+              <Button onClick={() => update()}>更新する</Button>
             </Box>
           </ModalFooter>
         </ModalContent>

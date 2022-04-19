@@ -9,7 +9,6 @@ export const useRequireSignin = () => {
   const toast = useToast()
 
   useEffect(() => {
-    console.log(currentUser)
     if (currentUser === undefined) return
 
     if (currentUser === null) {

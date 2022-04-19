@@ -16,6 +16,7 @@ import {
 import { AuthContext } from 'src/contexts/Auth.context'
 import { ProductType } from 'src/type/product'
 import { Button, GrayButton } from 'src/components/atoms/button'
+import axios from 'axios'
 
 type propsType = {
   isOpen: boolean
@@ -28,7 +29,8 @@ export const ProductModal = ({ isOpen, onClose, product }: propsType) => {
   const router = useRouter()
   const toast = useToast()
 
-  const buy = () => {
+  const buy = async () => {
+    if (!product) return
     if (!currentUser) {
       router.push('/signin')
       toast({
@@ -36,6 +38,23 @@ export const ProductModal = ({ isOpen, onClose, product }: propsType) => {
         duration: 3000,
         isClosable: true,
       })
+    }
+
+    const data = new FormData()
+    data.append('product_id', String(product?.id))
+
+    try {
+      await axios.post(`http://localhost:8080/purchases`, data, {
+        withCredentials: true,
+      })
+      toast({
+        description: '購入しました！',
+        duration: 3000,
+        isClosable: true,
+      })
+      onClose()
+    } catch (e) {
+      console.log(e)
     }
   }
 
@@ -48,7 +67,7 @@ export const ProductModal = ({ isOpen, onClose, product }: propsType) => {
           <ModalBody my="40px" mx="32px">
             <Flex position="relative">
               <Image
-                src={product?.imgUrl}
+                src={product?.imgUrl || 'https://bit.ly/dan-abramov'}
                 h="240px"
                 w="240px"
                 borderRadius="8px"

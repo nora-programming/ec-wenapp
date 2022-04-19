@@ -1,6 +1,6 @@
 export type UserType = {
-  id: number
-  name: string
-  email: string
-  imgUrl: string
+  ID: number
+  Name: string
+  Email: string
+  ImgUrl: SVGAnimatedString
 }

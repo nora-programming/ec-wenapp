@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import { useRouter } from 'next/router'
 import { NextPage } from 'next'
 import { EmailIcon, UnlockIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
@@ -9,18 +9,42 @@ import {
   InputGroup,
   InputLeftElement,
   InputRightElement,
+  useToast,
 } from '@chakra-ui/react'
 import { Common } from 'src/layout/common'
 import { Button } from 'src/components/atoms/button'
 import { useRequireSignout } from 'src/hooks/useRequireSignout'
+import axios from 'axios'
+import { AuthContext } from 'src/contexts/Auth.context'
 
 const Signin: NextPage = () => {
   useRequireSignout()
+  const toast = useToast()
   const router = useRouter()
   const [show, setShow] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const handleClick = () => setShow(!show)
+  const { setCurrentUser } = useContext(AuthContext)
+
+  const login = async () => {
+    const data = new FormData()
+    data.append('email', email)
+    data.append('password', password)
+    try {
+      const res = await axios.post(`http://localhost:8080/signin`, data, {
+        withCredentials: true,
+      })
+      setCurrentUser(res.data)
+      toast({
+        description: 'ログインしました！',
+        duration: 3000,
+        isClosable: true,
+      })
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
   return (
     <Common>
@@ -68,9 +92,7 @@ const Signin: NextPage = () => {
               </>
             </InputRightElement>
           </InputGroup>
-          <Button onClick={() => console.log(email + password)}>
-            ログインする
-          </Button>
+          <Button onClick={() => login()}>ログインする</Button>
           <Text
             mt="16px"
             fontSize="14px"

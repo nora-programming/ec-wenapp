@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import { useRouter } from 'next/router'
 import { NextPage } from 'next'
 import { EmailIcon, UnlockIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
@@ -13,6 +13,9 @@ import {
 import { Common } from 'src/layout/common'
 import { Button } from 'src/components/atoms/button'
 import { useRequireSignout } from 'src/hooks/useRequireSignout'
+import axios from 'axios'
+import { AuthContext } from 'src/contexts/Auth.context'
+import { useToast } from '@chakra-ui/react'
 
 const Signup: NextPage = () => {
   useRequireSignout()
@@ -21,6 +24,27 @@ const Signup: NextPage = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const handleClick = () => setShow(!show)
+  const { setCurrentUser } = useContext(AuthContext)
+  const toast = useToast()
+
+  const register = async () => {
+    const data = new FormData()
+    data.append('email', email)
+    data.append('password', password)
+    try {
+      const res = await axios.post(`http://localhost:8080/signup`, data)
+      setCurrentUser(res.data)
+      router.push('/')
+      toast({
+        description: '新規登録しました！',
+        duration: 3000,
+        isClosable: true,
+      })
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
   return (
     <>
       <Common>
@@ -68,9 +92,7 @@ const Signup: NextPage = () => {
                 </>
               </InputRightElement>
             </InputGroup>
-            <Button onClick={() => console.log(email + password)}>
-              登録する
-            </Button>
+            <Button onClick={() => register()}>登録する</Button>
             <Text
               mt="16px"
               fontSize="14px"

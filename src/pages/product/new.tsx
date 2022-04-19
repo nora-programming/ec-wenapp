@@ -1,15 +1,30 @@
 import { useState, useRef } from 'react'
 import { NextPage } from 'next'
 import { DownloadIcon } from '@chakra-ui/icons'
-import { Box, Image, Flex, Input, Text, Textarea } from '@chakra-ui/react'
+import {
+  Box,
+  Image,
+  Flex,
+  Input,
+  NumberInput,
+  Text,
+  Textarea,
+  NumberInputField,
+  useToast,
+} from '@chakra-ui/react'
 import { Common } from 'src/layout/common'
 import { Button } from 'src/components/atoms/button'
 import { useRequireSignin } from 'src/hooks/useRequireSignin'
+import axios from 'axios'
+import { useRouter } from 'next/router'
 
 const ProductNew: NextPage = () => {
   useRequireSignin()
+  const router = useRouter()
+  const toast = useToast()
   const [title, setTitle] = useState('')
   const [url, setUrl] = useState('')
+  const [price, setPrice] = useState(0)
   const [description, setDescription] = useState('')
   const [file, setFile] = useState<File>()
   const inputRef = useRef<HTMLInputElement>(null)
@@ -27,6 +42,27 @@ const ProductNew: NextPage = () => {
     }
     setFile(f)
     reader.readAsDataURL(f)
+  }
+
+  const create = async () => {
+    const data = new FormData()
+    data.append('price', String(price))
+    data.append('title', title)
+    data.append('description', description)
+    if (file) data.append('file', file)
+    try {
+      const res = await axios.post(`http://localhost:8080/products`, data, {
+        withCredentials: true,
+      })
+      toast({
+        description: '商品を出品しました！',
+        duration: 3000,
+        isClosable: true,
+      })
+      router.push('/')
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   return (
@@ -86,6 +122,18 @@ const ProductNew: NextPage = () => {
           </Box>
           <Box mb="32px">
             <Text fontSize="18px" fontWeight="bold" mb="8px">
+              値段
+            </Text>
+            <NumberInput>
+              <NumberInputField
+                onChange={(e) => setPrice(Number(e.target.value))}
+                value={price}
+                placeholder="値段を入力してください"
+              />
+            </NumberInput>
+          </Box>
+          <Box mb="32px">
+            <Text fontSize="18px" fontWeight="bold" mb="8px">
               商品説明
             </Text>
             <Textarea
@@ -94,7 +142,7 @@ const ProductNew: NextPage = () => {
               placeholder="商品の説明を入力してください"
             />
           </Box>
-          <Button onClick={() => console.log(file)}>出品する</Button>
+          <Button onClick={() => create()}>出品する</Button>
         </Box>
       </Box>
     </Common>

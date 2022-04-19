@@ -11,11 +11,6 @@ export const useRequireSignout = () => {
     if (currentUser === undefined) return
 
     if (currentUser) {
-      toast({
-        description: 'すでにログイン済みです',
-        duration: 3000,
-        isClosable: true,
-      })
       router.push('/')
       return
     }
