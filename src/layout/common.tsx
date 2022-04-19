@@ -1,5 +1,5 @@
 import { Box } from '@chakra-ui/react'
-import { Header } from 'src/components/organisms/Header'
+import { Header } from 'src/components/organisms/header'
 
 type propsType = {
   children: React.ReactNode
