@@ -17,17 +17,44 @@ import { AuthContext } from 'src/contexts/Auth.context'
 import { ProductType } from 'src/type/product'
 import { Button, GrayButton } from 'src/components/atoms/button'
 import axios from 'axios'
+import { RiDeleteBin6Line } from 'react-icons/Ri'
+import { IconContext } from 'react-icons'
 
 type propsType = {
   isOpen: boolean
   onClose: () => void
   product: ProductType | undefined
+  loadProducts: () => void
 }
 
-export const ProductModal = ({ isOpen, onClose, product }: propsType) => {
+export const ProductModal = ({
+  isOpen,
+  onClose,
+  product,
+  loadProducts,
+}: propsType) => {
   const { currentUser } = useContext(AuthContext)
   const router = useRouter()
   const toast = useToast()
+
+  const deleteProduct = async () => {
+    if (!product) return
+    if (!window.confirm('商品を削除しますか？')) return
+    try {
+      await axios.delete(`http://localhost:8080/products/${product.id}`, {
+        withCredentials: true,
+      })
+      toast({
+        description: '商品を削除しました！',
+        duration: 3000,
+        isClosable: true,
+      })
+      loadProducts()
+      onClose()
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
   const buy = async () => {
     if (!product) return
@@ -67,10 +94,11 @@ export const ProductModal = ({ isOpen, onClose, product }: propsType) => {
           <ModalBody my="40px" mx="32px">
             <Flex position="relative">
               <Image
-                src={product?.imgUrl || 'https://bit.ly/dan-abramov'}
+                src={product?.img_url}
                 h="240px"
                 w="240px"
                 borderRadius="8px"
+                objectFit="cover"
                 mr="40px"
               />
               <Box w="430px">
@@ -91,6 +119,13 @@ export const ProductModal = ({ isOpen, onClose, product }: propsType) => {
             </Flex>
           </ModalBody>
           <ModalFooter>
+            {currentUser?.id == product?.creater_id && (
+              <Box mr="16px" cursor="pointer" onClick={() => deleteProduct()}>
+                <IconContext.Provider value={{ size: '25px' }}>
+                  <RiDeleteBin6Line />
+                </IconContext.Provider>
+              </Box>
+            )}
             <Box mr="16px">
               <GrayButton onClick={() => onClose()}>キャンセル</GrayButton>
             </Box>

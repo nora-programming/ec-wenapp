@@ -12,19 +12,20 @@ const Home: NextPage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [products, setProducts] = useState([])
 
-  useEffect(() => {
-    const f = async () => {
-      try {
-        const res = await axios.get(`http://localhost:8080/products`, {
-          withCredentials: true,
-        })
+  const loadProducts = async () => {
+    try {
+      const res = await axios.get(`http://localhost:8080/products`, {
+        withCredentials: true,
+      })
 
-        setProducts(res.data)
-      } catch (e) {
-        console.log(e)
-      }
+      setProducts(res.data)
+    } catch (e) {
+      console.log(e)
     }
-    f()
+  }
+
+  useEffect(() => {
+    loadProducts()
   }, [])
 
   const onClickProduct = (product: ProductType) => {
@@ -43,6 +44,7 @@ const Home: NextPage = () => {
             isOpen={isOpen}
             onClose={onClose}
             product={focusProduct}
+            loadProducts={loadProducts}
           />
           {products && products.length > 0 ? (
             <ProductList products={products} onClickProduct={onClickProduct} />

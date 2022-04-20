@@ -15,10 +15,7 @@ export const ProductList = ({ products, onClickProduct }: PropType) => {
           {products.map((p) => {
             return (
               <Box key={p.id} mx="auto" onClick={() => onClickProduct(p)}>
-                <ProductCard
-                  imgUrl={p.imgUrl || 'https://bit.ly/dan-abramov'}
-                  price={p.price}
-                >
+                <ProductCard imgUrl={p.img_url} price={p.price}>
                   {p.title}
                 </ProductCard>
               </Box>

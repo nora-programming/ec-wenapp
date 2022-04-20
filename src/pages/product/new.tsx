@@ -87,7 +87,13 @@ const ProductNew: NextPage = () => {
                 onClick={onClickButton}
                 cursor="pointer"
               >
-                <Image src={url} borderRadius="8px" />
+                <Image
+                  src={url}
+                  w="230px"
+                  h="230px"
+                  objectFit="contain"
+                  borderRadius="8px"
+                />
               </Box>
             </>
           ) : (

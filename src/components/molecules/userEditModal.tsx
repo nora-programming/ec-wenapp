@@ -33,14 +33,9 @@ export const UserEditModal = ({ isOpen, onClose }: propsType) => {
 
   useEffect(() => {
     if (!currentUser) return
-    setName(currentUser.Name)
-    setUrl(url)
-  }, [currentUser, setUrl, url])
-
-  useEffect(() => {
-    if (!url) return
-    setUrl(url)
-  }, [setUrl, url])
+    setName(currentUser.name)
+    setUrl(currentUser.img_url)
+  }, [currentUser])
 
   const onClickButton = () => {
     inputRef.current?.click()
@@ -63,7 +58,7 @@ export const UserEditModal = ({ isOpen, onClose }: propsType) => {
     if (file) data.append('file', file)
     try {
       const res = await axios.put(
-        `http://localhost:8080/users/${currentUser?.ID}`,
+        `http://localhost:8080/users/${currentUser?.id}`,
         data,
         {
           withCredentials: true,
@@ -148,7 +143,7 @@ export const UserEditModal = ({ isOpen, onClose }: propsType) => {
                   <Text fontSize="16px" fontWeight="bold" mb="8px">
                     メールアドレス
                   </Text>
-                  <Input value={currentUser?.Email} isDisabled bg="gray.300" />
+                  <Input value={currentUser?.email} isDisabled bg="gray.300" />
                 </Box>
               </Box>
             </Flex>

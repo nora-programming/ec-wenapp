@@ -1,6 +1,6 @@
 export type UserType = {
-  ID: number
-  Name: string
-  Email: string
-  ImgUrl: string
+  id: number
+  name: string
+  email: string
+  img_url: string
 }

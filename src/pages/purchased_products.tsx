@@ -16,7 +16,7 @@ import { useRequireSignin } from 'src/hooks/useRequireSignin'
 import { PurchasedProductType } from 'src/type/purchasedProduct'
 import axios from 'axios'
 
-const ProductPurchased: NextPage = () => {
+const PurchasedProducts: NextPage = () => {
   useRequireSignin()
   const [purchasedProducts, setPurchasedProducts] =
     useState<PurchasedProductType[]>()
@@ -80,4 +80,4 @@ const ProductPurchased: NextPage = () => {
   )
 }
 
-export default ProductPurchased
+export default PurchasedProducts

@@ -64,13 +64,13 @@ export const Header = () => {
             <Box mr="16px">
               <Menu>
                 <MenuButton>
-                  {currentUser.ImgUrl ? (
+                  {currentUser.img_url ? (
                     <Image
                       mt="4px"
                       borderRadius="full"
                       boxSize="40px"
-                      src={currentUser.ImgUrl}
-                      alt="Dan Abramov"
+                      objectFit="cover"
+                      src={currentUser.img_url}
                       cursor="pointer"
                     />
                   ) : (
@@ -87,7 +87,7 @@ export const Header = () => {
                   </MenuItem>
                   <MenuItem
                     fontSize="14px"
-                    onClick={() => router.push('/product_purchased')}
+                    onClick={() => router.push('/purchased_products')}
                   >
                     購入した商品
                   </MenuItem>
