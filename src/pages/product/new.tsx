@@ -50,8 +50,15 @@ const ProductNew: NextPage = () => {
     data.append('title', title)
     data.append('description', description)
     if (file) data.append('file', file)
+    if (!title || !file || !description || !price)
+      return toast({
+        description: '入力されていない項目があります。',
+        duration: 3000,
+        isClosable: true,
+        status: 'error',
+      })
     try {
-      const res = await axios.post(`http://localhost:8080/products`, data, {
+      await axios.post(`http://localhost:8080/products`, data, {
         withCredentials: true,
       })
       toast({
